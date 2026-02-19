@@ -13,28 +13,6 @@ require_cmd() {
   fi
 }
 
-ensure_finicky_installed() {
-  if [[ -d "/Applications/Finicky.app" ]]; then
-    return
-  fi
-
-  echo "Finicky not found. Attempting Homebrew install..."
-
-  if command -v brew >/dev/null 2>&1; then
-    brew install --cask finicky
-  else
-    echo "Homebrew is not installed, so Finicky could not be auto-installed." >&2
-    echo "Install Finicky manually: https://github.com/johnste/finicky" >&2
-    exit 1
-  fi
-
-  if [[ ! -d "/Applications/Finicky.app" ]]; then
-    echo "Finicky installation did not complete as expected." >&2
-    echo "Install manually and rerun: https://github.com/johnste/finicky" >&2
-    exit 1
-  fi
-}
-
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "This installer only supports macOS." >&2
   exit 1
@@ -43,7 +21,12 @@ fi
 require_cmd osacompile
 require_cmd shortcuts
 
-ensure_finicky_installed
+if [[ ! -d "/Applications/Finicky.app" ]]; then
+  echo "Finicky is not installed in /Applications/Finicky.app" >&2
+  echo "Install Finicky first: https://github.com/johnste/finicky" >&2
+  echo "Homebrew option: brew install --cask finicky" >&2
+  exit 1
+fi
 
 mkdir -p "$(dirname "$RUNNER_APP_PATH")"
 
