@@ -1,0 +1,26 @@
+// spotify2applemusic generated config
+const DEFAULT_BROWSER_BUNDLE_ID = "company.thebrowser.Browser";
+const RUNNER_APP_PATH = "__RUNNER_APP_PATH__";
+
+const isSpotify = (url) =>
+  url.protocol === "https:" &&
+  ["open.spotify.com", "spoti.fi", "spotify.link"].includes(url.hostname);
+
+export default {
+  defaultBrowser: { name: DEFAULT_BROWSER_BUNDLE_ID, appType: "bundleId" },
+
+  options: {
+    logRequests: true,
+  },
+
+  handlers: [
+    {
+      match: isSpotify,
+      browser: {
+        name: RUNNER_APP_PATH,
+        appType: "path",
+        openInBackground: true,
+      },
+    },
+  ],
+};
