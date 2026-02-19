@@ -13,6 +13,28 @@ require_cmd() {
   fi
 }
 
+ensure_finicky_installed() {
+  if [[ -d "/Applications/Finicky.app" ]]; then
+    return
+  fi
+
+  echo "Finicky not found. Attempting Homebrew install..."
+
+  if command -v brew >/dev/null 2>&1; then
+    brew install --cask finicky
+  else
+    echo "Homebrew is not installed, so Finicky could not be auto-installed." >&2
+    echo "Install Finicky manually: https://github.com/johnste/finicky" >&2
+    exit 1
+  fi
+
+  if [[ ! -d "/Applications/Finicky.app" ]]; then
+    echo "Finicky installation did not complete as expected." >&2
+    echo "Install manually and rerun: https://github.com/johnste/finicky" >&2
+    exit 1
+  fi
+}
+
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "This installer only supports macOS." >&2
   exit 1
@@ -21,11 +43,7 @@ fi
 require_cmd osacompile
 require_cmd shortcuts
 
-if [[ ! -d "/Applications/Finicky.app" ]]; then
-  echo "Finicky is not installed in /Applications/Finicky.app" >&2
-  echo "Install it first (example): brew install --cask finicky" >&2
-  exit 1
-fi
+ensure_finicky_installed
 
 mkdir -p "$(dirname "$RUNNER_APP_PATH")"
 
@@ -117,4 +135,4 @@ echo
 echo "Install complete."
 echo "1) Ensure your shortcut exists: ${SHORTCUT_NAME}"
 echo "2) Set macOS default browser to Finicky"
-echo "3) Test: open 'https://open.spotify.com/track/2twuKLhUWkc1oWUfBxMO2t'"
+echo "3) Test: open 'https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=d511cedca89449fa'"
