@@ -8,7 +8,12 @@ Intercept Spotify links before your normal browser, run a shortcut in the backgr
 
 1. Download/import the shortcut from the button above.
 2. Confirm the shortcut name is exactly `SpotifyToAppleMusic`.
-3. Install [Finicky](https://github.com/johnste/finicky) (or let `./install.sh` install it via Homebrew).
+3. Install [Finicky](https://github.com/johnste/finicky):
+
+```bash
+brew install --cask finicky
+```
+
 4. Run:
 
 ```bash
@@ -31,10 +36,6 @@ Expected result:
 - Spotify link is intercepted.
 - Shortcut runs in background.
 - Apple Music opens the converted song.
-
-Note:
-- `./install.sh` auto-installs Finicky with `brew install --cask finicky` if Finicky is missing.
-- If Homebrew is not installed, the script prints the Finicky link and exits.
 
 ## Choose Your Browser
 
