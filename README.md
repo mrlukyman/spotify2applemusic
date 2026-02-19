@@ -16,6 +16,9 @@ brew install --cask finicky
 
 4. Run:
 
+If you want a browser other than Arc, pass `DEFAULT_BROWSER_BUNDLE_ID` here.
+See `Choose Your Browser` below for examples.
+
 ```bash
 git clone https://github.com/mrlukyman/spotify2applemusic.git
 cd spotify2applemusic
