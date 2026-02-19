@@ -1,38 +1,97 @@
-# Spotify to Apple Music Redirect (macOS)
+# Spotify -> Apple Music Redirect (macOS)
 
-Intercept Spotify links before your browser opens, run a Shortcut in the background, convert to Apple Music, and open Music.app.
+Open any Spotify link from any app, run a Shortcut in the background, convert to Apple Music, and launch Music.app.
 
-## What this repo installs
+## Demo setup flow
 
-- A tiny background runner app: `~/Applications/SpotifyShortcutRunner.app`
-- A Finicky config: `~/.finicky.js`
+These screenshots are quick setup guides for the key steps.
 
-Finicky catches Spotify links and sends them to the runner app. The runner app calls `Shortcuts Events` in the background, so the Shortcuts window does not need to open.
+![Import Shortcut](docs/screenshots/01-import-shortcut.svg)
+![Set Finicky as default browser](docs/screenshots/02-default-browser-finicky.svg)
+![Install and test](docs/screenshots/03-install-and-test.svg)
+
+## What this project installs
+
+- Background runner app: `~/Applications/SpotifyShortcutRunner.app`
+- Finicky config: `~/.finicky.js`
+
+Finicky catches Spotify links and sends them to the runner app. The runner app calls **Shortcuts Events** so the Shortcut runs in the background.
 
 ## Requirements
 
 - macOS
-- [Finicky](https://github.com/johnste/finicky) installed
-- A Shortcut named `SpotifyToAppleMusic` that accepts text input (Spotify URL)
+- [Finicky](https://github.com/johnste/finicky)
+- A Shortcut named **`SpotifyToAppleMusic`**
 
-## Install
+Shortcut import link:
+- [SpotifyToAppleMusic (iCloud)](https://www.icloud.com/shortcuts/bb570f1dfbdb4cc690d4b999f5c0cce7)
+
+## 5-minute install
+
+1. Import the shortcut from the iCloud link above.
+2. Verify the shortcut name is exactly `SpotifyToAppleMusic`.
+3. Clone this repo and run installer:
 
 ```bash
+git clone https://github.com/mrlukyman/spotify2applemusic.git
+cd spotify2applemusic
 chmod +x ./install.sh ./uninstall.sh
 ./install.sh
 ```
 
-Optional environment variables:
+4. Set macOS default browser to **Finicky**:
+- `System Settings` -> `Desktop & Dock` -> `Default web browser` -> `Finicky`
+
+5. Test:
 
 ```bash
-SHORTCUT_NAME="SpotifyToAppleMusic" DEFAULT_BROWSER_BUNDLE_ID="company.thebrowser.Browser" ./install.sh
+open "https://open.spotify.com/track/2twuKLhUWkc1oWUfBxMO2t?si=test"
 ```
 
-## After install
+Expected behavior:
+- Spotify URL is intercepted before Arc/Safari/etc.
+- Shortcut runs in background.
+- Apple Music opens to the converted item.
 
-1. Set macOS default browser to **Finicky**.
-2. Open a Spotify link from any app.
-3. Grant Automation permissions if prompted.
+## Optional customization
+
+Use a different shortcut name:
+
+```bash
+SHORTCUT_NAME="MySpotifyConverter" ./install.sh
+```
+
+Use a different fallback browser bundle ID:
+
+```bash
+DEFAULT_BROWSER_BUNDLE_ID="com.apple.Safari" ./install.sh
+```
+
+## Permissions (first run)
+
+If prompted, allow Automation for runner app -> Shortcuts Events/Shortcuts.
+
+If things fail silently, check:
+- `System Settings` -> `Privacy & Security` -> `Automation`
+- Ensure permissions are enabled for the runner app.
+
+## Troubleshooting
+
+Finicky opens normal browser for Spotify URLs:
+- Make sure Finicky is your default browser.
+- Restart Finicky after install.
+
+Shortcut does not run:
+- Confirm shortcut name is exactly `SpotifyToAppleMusic`.
+- Test directly:
+
+```bash
+echo "https://open.spotify.com/track/2twuKLhUWkc1oWUfBxMO2t" > /tmp/spotify-test-url.txt
+shortcuts run "SpotifyToAppleMusic" --input-path /tmp/spotify-test-url.txt
+```
+
+Music opens web instead of app:
+- Make sure your shortcut opens `nativeAppUriDesktop` (or equivalent app URI), not plain web URL.
 
 ## Uninstall
 
@@ -40,13 +99,6 @@ SHORTCUT_NAME="SpotifyToAppleMusic" DEFAULT_BROWSER_BUNDLE_ID="company.thebrowse
 ./uninstall.sh
 ```
 
-## Share with friends
+## License
 
-- Share this repo.
-- Share your Shortcut separately via iCloud share link.
-- They run `./install.sh` after creating/importing the same shortcut name.
-
-## Notes
-
-- Default browser fallback is Arc (`company.thebrowser.Browser`).
-- To use another browser, set `DEFAULT_BROWSER_BUNDLE_ID` during install.
+MIT. See `LICENSE`.
